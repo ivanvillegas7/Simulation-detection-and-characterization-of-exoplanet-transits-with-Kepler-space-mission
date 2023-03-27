@@ -2,6 +2,8 @@
 
 This will be my final degree project's (TFG in Spanish) repository.
 
-The Python file 'test_KEPLER.py' is the one being used to test how the data work. The data files can be found in folder 'Test data'.
+Folder 'First tests' containes all the files relative to the very first test, which might probably be deleted any time soon.
 
-The Python file 'test_KEPLER 2.py' is the one being used to test how the data from file 'kplr000757450_q1_q16_tce_01_dvt_lc.tbl' work. The data file can be found in folder 'Test data'. The plots made with this program can be found on the folder within the data files.
+In folder 'Code' all the most recent Python programs can be found. In folder 'TrES2b' can be found all the data relative to star TrES2. In this folder, two others can be found, one for 'Short' cadence and 'Long' cadence data.
+
+To run the code, maintain the structure of the repository and simply run the main code ('main.py').
