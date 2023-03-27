@@ -232,31 +232,3 @@ def read_short_data(star: str, quarter: str) -> Tuple[List[float], List[float]]:
     filtered_time, filtered_flux = first_filter(time, flux)
                 
     return (filtered_time, normalize(filtered_flux))
-
-'''
-
-import matplotlib.pyplot as plt
-
-tQ0: List[float]
-
-fQ0: List[float]
-
-nfQ0: List[float]
-
-tQ0, fQ0 = read_data('Q0')
-
-plt.figure()
-
-plt.plot(tQ0, fQ0, marker='.', label='TrES2b long cadence quarter  data', ls='none')
-  
-plt.xlabel(r'$t$ [s]')
-
-plt.ylabel(r'$\phi$ [e$^-$/s]')
-
-plt.title('Flux vs time')
-
-plt.grid(True)
-
-plt.legend()
-
-'''
