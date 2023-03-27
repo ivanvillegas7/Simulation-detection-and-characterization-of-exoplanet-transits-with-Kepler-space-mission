@@ -2,7 +2,7 @@
 """
 Created on Mon Mar 27 11:49:51 2023
 
-@author: Iván
+@author: Iván Villegas Pérez
 """
 
 import ReadData as RD
