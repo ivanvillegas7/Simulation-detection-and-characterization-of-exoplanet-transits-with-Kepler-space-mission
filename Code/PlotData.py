@@ -2,7 +2,7 @@
 """
 Created on Thu Mar 16 17:21:07 2023
 
-@author: Iván
+@author: Iván Villegas Pérez
 """
 
 from typing import List
