@@ -32,7 +32,7 @@ import PlotData as PD
 
 from typing import List
 
-def main(star: str):
+def main(star: str, f_filter: bool):
     
     '''
     This is the main function of the program. For a given star, it calls the
@@ -77,7 +77,7 @@ def main(star: str):
         
     time: List[float] = []
     
-    norm_flux: List[float] = []
+    final_flux: List[float] = []
     
     #Save the data
     
@@ -87,13 +87,13 @@ def main(star: str):
         
         read_flux: List[float]
         
-        read_time, read_flux = RD.read_long_data(star,files_long[i])
+        read_time, read_flux = RD.read_long_data(star,files_long[i], f_filter)
         
         for j in range(len(read_flux)):
             
             time.append(read_time[j])
             
-            norm_flux.append(read_flux[j])
+            final_flux.append(read_flux[j])
             
     for k in range(len(files_short)):
         
@@ -101,17 +101,23 @@ def main(star: str):
         
         read_flux: List[float]
         
-        read_time, read_flux = RD.read_short_data(star,files_short[k])
+        read_time, read_flux = RD.read_short_data(star,files_short[k], f_filter)
         
         for l in range(len(read_flux)):
             
             time.append(read_time[l])
             
-            norm_flux.append(read_flux[l])
+            final_flux.append(read_flux[l])
             
-    #plot the data
+    #Plot the data
+    
+    if f_filter==True:
         
-    PD.plot_norm_data(time, norm_flux, star)
+        PD.plot_norm_data(time, final_flux, star)
+        
+    else:
+        
+        PD.plot_data(time, final_flux, star)
     
 print('')
 
@@ -143,6 +149,17 @@ while star != 'TrES2b':
 
     print('')
 
+f: str = input('Do you want to apply the first filter? (It wiil be applied\
+               unless specified): ')
+    
+if f.lower()=='no':
+    
+    f_filter: bool = False
+    
+else:
+    
+    f_filter: bool = True
+
 #Runs the program
     
-main(star)
+main(star, f_filter)

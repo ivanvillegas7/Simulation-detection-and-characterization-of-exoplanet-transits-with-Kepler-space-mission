@@ -2,7 +2,7 @@
 """
 Created on Sun Mar 26 13:20:37 2023
 
-@author: Iván Villegas Pérez
+@author: Iván
 """
 import numpy as np
 
@@ -119,7 +119,8 @@ def normalize(flux: List[float]) -> List[float]:
         
     return return_flux
 
-def read_long_data(star: str, quarter: str) -> Tuple[List[float], List[float]]:
+def read_long_data(star: str, quarter: str, f_filter: bool)\
+    -> Tuple[List[float], List[float]]:
     
     '''
     
@@ -163,19 +164,25 @@ def read_long_data(star: str, quarter: str) -> Tuple[List[float], List[float]]:
                 
                 time.append(float(vals[1]))
                 
-                flux.append(float(vals[2])*1e-3)
+                flux.append(float(vals[2]))
                 
-    filtered_time: List[float]
+    if f_filter!=True:
     
-    filtered_flux: List[float]
-    
-    #Apply the first filter
-    
-    filtered_time, filtered_flux = first_filter(time, flux)
-                
-    return (filtered_time, normalize(filtered_flux))
+        return (time, flux)
 
-def read_short_data(star: str, quarter: str) -> Tuple[List[float], List[float]]:
+    else:
+    
+        filtered_time: List[float]
+        
+        filtered_flux: List[float]
+        
+        #Apply the first filter
+        
+        filtered_time, filtered_flux = first_filter(time, flux)
+                
+        return (filtered_time, normalize(filtered_flux))
+
+def read_short_data(star: str, quarter: str, f_filter: bool) -> Tuple[List[float], List[float]]:
     
     '''
     
@@ -221,14 +228,20 @@ def read_short_data(star: str, quarter: str) -> Tuple[List[float], List[float]]:
                 
                 time.append(float(vals[1]))
                 
-                flux.append(float(vals[2])*1e-3)
+                flux.append(float(vals[2]))
+    
+    if f_filter!=True:
+    
+        return (time, flux)
+
+    else:
+    
+        filtered_time: List[float]
+        
+        filtered_flux: List[float]
+        
+        #Apply the first filter
+        
+        filtered_time, filtered_flux = first_filter(time, flux)
                 
-    filtered_time: List[float]
-    
-    filtered_flux: List[float]
-    
-    #Apply the first filter
-    
-    filtered_time, filtered_flux = first_filter(time, flux)
-                
-    return (filtered_time, normalize(filtered_flux))
+        return (filtered_time, normalize(filtered_flux))
