@@ -2,7 +2,7 @@
 """
 Created on Sun Mar 26 13:20:37 2023
 
-@author: Iván
+@author: Iván Villegas Pérez
 """
 import numpy as np
 
@@ -164,7 +164,7 @@ def read_long_data(star: str, quarter: str, f_filter: bool)\
                 
                 time.append(float(vals[1]))
                 
-                flux.append(float(vals[2]))
+                flux.append(float(vals[2])/1e3)
                 
     if f_filter!=True:
     
@@ -228,7 +228,7 @@ def read_short_data(star: str, quarter: str, f_filter: bool) -> Tuple[List[float
                 
                 time.append(float(vals[1]))
                 
-                flux.append(float(vals[2]))
+                flux.append(float(vals[2])/1e3)
     
     if f_filter!=True:
     

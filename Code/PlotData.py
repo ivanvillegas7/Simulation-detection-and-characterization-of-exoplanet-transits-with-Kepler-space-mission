@@ -2,7 +2,7 @@
 """
 Created on Thu Mar 16 17:21:07 2023
 
-@author: Iván
+@author: Iván Villegas Pérez
 """
 
 from typing import List
@@ -37,7 +37,7 @@ def plot_data(x: List[float], y: List[float], star: str):
       
     plt.xlabel(r'$t$ [days]')
     
-    plt.ylabel(r'$\phi$ [e$^-$/s]')
+    plt.ylabel(r'$10^{-3}\phi$ [e$^-$/s]')
     
     plt.title(f'Un-normalised flux vs time for {star}')
     
@@ -46,7 +46,7 @@ def plot_data(x: List[float], y: List[float], star: str):
     plt.legend()
     
     plt.savefig(f'../Plots/un-normalised {star}.jpg')
-
+    
 def plot_norm_data(x: List[float], y: List[float], star: str):
     
     '''

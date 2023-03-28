@@ -54,10 +54,10 @@ def main(star: str, f_filter: bool):
         
         #Save the data files (w/o extension, which is '.tbl')
     
-        files_long: List[str] = ['Q0', 'Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6',\
-                                 'Q7', 'Q9', 'Q10', 'Q11', 'Q13', 'Q14', 'Q15',\
-                                 'Q17']
-            
+        #files_long: List[str] = ['Q0', 'Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6',\
+        #                         'Q7', 'Q9', 'Q10', 'Q11', 'Q13', 'Q14', 'Q15',\
+        #                         'Q17']
+     
         files_short: List[str] = ['Q0', 'Q1', 'Q2a', 'Q2b', 'Q2c', 'Q3a', 'Q3b',\
                                   'Q3c', 'Q4', 'Q5', 'Q6a', 'Q6b', 'Q6c', 'Q7a',\
                                   'Q7b', 'Q7c', 'Q9a', 'Q9b', 'Q9c', 'Q10a',\
@@ -69,7 +69,7 @@ def main(star: str, f_filter: bool):
         
         #Save the data files (w/o extension, which is '.tbl')
         
-        files_long: List[str] = []
+        #files_long: List[str] = []
         
         files_short: List[str] = []
 
@@ -80,7 +80,7 @@ def main(star: str, f_filter: bool):
     final_flux: List[float] = []
     
     #Save the data
-    
+    '''
     for i in range(len(files_long)):
         
         read_time: List [float]
@@ -94,7 +94,7 @@ def main(star: str, f_filter: bool):
             time.append(read_time[j])
             
             final_flux.append(read_flux[j])
-            
+    '''       
     for k in range(len(files_short)):
         
         read_time: List [float]
@@ -118,6 +118,8 @@ def main(star: str, f_filter: bool):
     else:
         
         PD.plot_data(time, final_flux, star)
+
+#%%
     
 print('')
 
@@ -149,7 +151,7 @@ while star != 'TrES2b':
 
     print('')
 
-f: str = input('Do you want to apply the first filter? (It wiil be applied\
+f: str = input('Do you want to apply the first filter? (It will be applied\
                unless specified): ')
     
 if f.lower()=='no':
