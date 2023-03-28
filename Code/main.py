@@ -3,11 +3,32 @@
 Created on Mon Mar 27 11:49:51 2023
 
 @author: Iván Villegas Pérez
+
+This code has been developed in a first attemp to apply a first filter,
+normalise and plot the data downloaded from Nasa Exoplanet Archive for TrES-2 b
+or Kepler-1 b (https://exoplanetarchive.ipac.caltech.edu/overview/K00001.01), in
+a future, it will also contain data from Kepler-75 b. The downloaded data can
+be found in the folder with the same name as the studied object, in the
+short/long cadence folder with names Q#, which identifies the quarter of
+observation (for different file of the same quarter, letters a, b and c denote
+observation was earlier).
+
+Run the main code and the whole project will be run. Once it is run, it will
+ask the user to type the studied star. Since the only available data are from
+TrES-2 b, the user must type 'TrES2b', otherwise, it will keep asking for the
+object name.
+
 """
+
+#Imports the code to read, normalise and appply the first filter
 
 import ReadData as RD
 
+#Imports the code to plot the data
+
 import PlotData as PD
+
+#Imports 'List'
 
 from typing import List
 
@@ -27,7 +48,11 @@ def main(star: str):
         none
     '''
     
+    #Selection of the star 
+    
     if star=='TrES2b':
+        
+        #Save the data files (w/o extension, which is '.tbl')
     
         files_long: List[str] = ['Q0', 'Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q6',\
                                  'Q7', 'Q9', 'Q10', 'Q11', 'Q13', 'Q14', 'Q15',\
@@ -42,13 +67,19 @@ def main(star: str):
         
     elif star=='Kepler75b':
         
+        #Save the data files (w/o extension, which is '.tbl')
+        
         files_long: List[str] = []
         
         files_short: List[str] = []
-            
+
+    #Create list to save the data    
+        
     time: List[float] = []
     
     norm_flux: List[float] = []
+    
+    #Save the data
     
     for i in range(len(files_long)):
         
@@ -77,12 +108,16 @@ def main(star: str):
             time.append(read_time[l])
             
             norm_flux.append(read_flux[l])
+            
+    #plot the data
         
     PD.plot_norm_data(time, norm_flux, star)
     
 print('')
 
-star: str = input('Type the star you want to study (TrES2b or Kepler75): ') #Asks for the star name
+#Asks for the star name
+
+star: str = input('Type the star you want to study (TrES2b or Kepler75): ')
 
 print('')
 
@@ -104,8 +139,10 @@ while star != 'TrES2b':
 
     #Reasks for the star name
 
-    star: str = input('Type the star you want to study (TrES2b or Kepler75): ') #Asks for the star name
+    star: str = input('Type the star you want to study (TrES2b or Kepler75): ')
 
     print('')
+
+#Runs the program
     
 main(star)
