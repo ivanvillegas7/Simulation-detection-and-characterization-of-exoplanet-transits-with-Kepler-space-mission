@@ -142,7 +142,7 @@ def sim_flux(noise_params):
 
     t_period: float = float(input('Transit period: '))#2.5
     t_duration: float = float(input('Transit duration: '))#0.5
-    t0: float = float(input('Transit half time: '))#15
+    t0: float = float(input('Transit half time: '))#0.25
     depth: float = float(input('Transit depth: '))#5
     t_start: float = float(input('Initial time: '))#0
     t_end: float = float(input('Ending time: '))#50
