@@ -5,7 +5,8 @@ Created on Sat Apr 22 12:06:59 2023
 @author: Iván Villegas Pérez
 
 This Python script defines a main function that serves as the entry point for
-the program. It imports three other modules: numpy, simulate, read, and analize.
+the program. It imports three other modules: numpy, simulate, read, analize and
+remove.
 
 The program starts by prompting the user to choose whether to simulate or read
 real data. If the user chooses to simulate, it calls the simulate.data_maker()
@@ -22,7 +23,7 @@ Next, it fits the filtered flux data to a curve using the analize.best_fit()
 function, which returns an array of the best-fit parameters.
 
 Finally, it discards the variability from the star's light curve using the
-analize.discard_variability() function, which takes as input the time array, the
+remove.discard_variability() function, which takes as input the time array, the
 filtered flux array, and the best-fit parameters, and returns a new flux array
 that represents the transit without the stellar variability.
 """
@@ -32,6 +33,7 @@ import numpy as np
 import simulate
 import read
 import analize
+import remove
 
 def main():
 
@@ -56,7 +58,7 @@ def main():
     - read_data() from read.py
     - median_filter() from analize.py
     - best_fit() from analize.py
-    - discard_variability() from analize.py
+    - discard_variability() from remove.py
     """
     
     # Define the time and flux arrays for data_maker()
@@ -72,7 +74,7 @@ def main():
         
         print('')
         print('Thats not an option. Please enter a valid option (S or R).')
-        option = input("Do you want to simulate (S) or to read (R) real data?")
+        option = input("Do you want to simulate (S) or to use real (R) data? ")
     
     if option == 'S':
 
@@ -90,14 +92,26 @@ def main():
         
     # Apply a median filter to the flux data
     filtered_flux: np.array(float)
-    window_size: int = int(input('Window size for the median filter: '))#101
+    window_size: int = int(input('Window size for the median filter: '))
     filtered_flux = analize.median_filter(time, flux, window_size)
-
+    
     # Fit the filtered flux data to a curve
     best_fit_params: np.array(float)
     best_fit_params = analize.best_fit(time, filtered_flux)
     
     # Discard the variability from the star's light curve
     flux_nv: np.array(float)
-    flux_nv = analize.discard_variability(time, filtered_flux, best_fit_params)
-    
+    flux_nv = remove.discard_variability(time, filtered_flux, best_fit_params)
+    """
+    # Save the cleaned time and flux values in a text file
+    with open('data.txt', 'w') as f:
+        
+        f.write('x    y\n')
+        
+        for i in range(len(time)):
+            
+            f.write(f'{time[i]}    {flux_nv[i]}\n')
+            
+    f.close()
+    """
+    analize.characterization(time, flux_nv)

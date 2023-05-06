@@ -4,8 +4,8 @@ Created on Sat Apr 22 12:03:24 2023
 
 @author: Iván Villegas Pérez
 
-This Python script defines four functions: median_filter, best_fit_func, best_fit
-and discard_variability.
+This Python script defines six functions: median_filter, best_fit_func,
+best_fit, get_period, time_convert and characterization.
 
 The median_filter function applies a median filter of a given window size to a
 flux array. It takes three parameters: time (an array of time values), flux (an
@@ -28,12 +28,32 @@ of independent variable values, i.e., time) and y (an array of dependent variabl
 values, i.e., flux). The function returns the parameters of the best fit. The
 function also generates a plot of the filtered flux data and its best fit.
 
-The discard_variability function subtracts the variability of the light curve
-from the flux values. It also prints the transit parameters. The function takes
-three parameters: time (an array of time values), flux (an array of flux values)
-and params (an array of variability and transit parameters). The function returns
-an array of flux values with the variability subtracted. The function also
-generates a plot of the filtered flux data without the stellar variability.
+The get_period function calculates the period of a periodic signal in the input
+flux data. It first calculates the periodogram using the SciPy signal processing
+library's periodogram function. Then, it finds the frequency with the highest
+power (i.e. the dominant frequency) and calculates the period corresponding to
+that frequency. Finally, it plots the periodogram and saves the plot as
+'Periodogram.png' in the 'Plots' folder.
+
+The time_convert function takes a single argument, seconds, which is the total
+number of seconds to be converted into days, hours, minutes, and seconds. The
+function first computes the complete number of days by dividing the total number
+of seconds by the number of seconds in a day, which is 246060. It then computes
+the remaining number of seconds that cannot be expressed as complete days by
+using the operator '%'. It does the same operation until it the reamining time
+can only be expressed as seconds.
+
+The characterization function characterizes an exoplanet based on its light
+curve, taking into account the stellar variability. The function then uses
+get_period to obtain the period of the planet's orbit. It prompts the user for
+the star's radius and mass to compute the planet's radius and distance from the
+star, respectively. It also calculates the orbital inclination of the planet.
+The function does not return anything; it only prints the computed results.
+
+The functions use various modules such as numpy, matplotlib, and scipy. In
+summary, these functions can be used to process and analyze data from a star's
+light curve, including smoothing out noise, fitting the data to a user-defined
+function, and calculating the period of a periodic signal in the data.
 """
 
 # Do all the imports
@@ -42,7 +62,7 @@ import matplotlib.pyplot as plt
 import scipy as sc
 
 def median_filter(time: np.array(float), flux: np.array(float),\
-                  window_size: int) -> np.array(float):
+                  window_size: int):
 
     """
     Applies a median filter of a given window size to a flux array.
@@ -98,7 +118,7 @@ def best_fit_func(x, a, b, c, d, t0, p, dur, dep, m):
     - a (float): The amplitude of the sinusoidal signal.
     - b (float): The period of the sinusoidal signal.
     - c (float): The phase of the sinusoidal signal.
-    - d (float): The offset of the sinusoidal signal.
+    - d (float): The offset of the stellar flux.
     - t0 (float): The time of the center of the transit.
     - p (float): The period of the transit.
     - dur (float): The duration of the transit.
@@ -107,7 +127,7 @@ def best_fit_func(x, a, b, c, d, t0, p, dur, dep, m):
     Returns:
     - f (1D array): The modeled light curve.
     """
-
+    """
     # Calculate the phase of the transit
     phase: np.array(float) = ((x - t0 + 0.5*p) % p) - 0.5*p
     
@@ -121,14 +141,15 @@ def best_fit_func(x, a, b, c, d, t0, p, dur, dep, m):
             
             # If the transit depth is negative, return only the sinusoidal
             # signal
-            return a*np.sin(x/b+c)+d
+            return a*np.sin(x/b+c*np.pi)+d
             
         else:
             
             # If the transit depth is positive, add the transit model to the
             # sinusoidal model
-            return a*np.sin(x/b+c)+d-dep*(1-4*((x-t0+0.5*p)%p)-0.5*p**2/dur**2)
-
+    """
+            
+    return a*np.sin(2*np.pi*x/b+c*np.pi)+d#-dep*(1-4*(((x-t0+0.5*p)%p)-0.5*p)**2/dur**2)
 
 def best_fit(x, y):
     """
@@ -147,80 +168,112 @@ def best_fit(x, y):
     
     Plots:
     Generates a plot of the filtered flux data and its best fit.
-    The plot is saved in 'Plots' as 'Best Fit.png'
+    The plot is saved in 'Plots' as 'Best Fit.png'.
     """
     
     # Use curve_fit to find the best fit
-    popt, pcov = sc.optimize.curve_fit(best_fit_func, x, y)
-
+    popt, pcov = sc.optimize.curve_fit(best_fit_func, x, y)#,\
+                                       #p0=np.array([2, 7, 1, 0]))
+    """
+    print(popt)
+    print(pcov)
+    """
     # Plot data and its best fit
     plt.figure()
     plt.plot(x, y, 'o', label='Data')
     plt.plot(x, best_fit_func(x, *popt), label='Best fit')
+    plt.xlabel('Time (days)')
+    plt.ylabel('Flux')
+    plt.title("Star's light curve w/ best fit for stellar varibility")
     plt.legend()
     plt.grid(True)
     plt.savefig('../Plots/Best Fit.png')
     
     return popt
 
-def discard_variability(time, flux, params):
+def get_period(flux):
     """
-    Subtracts the variability of the light curve from the flux values.
-    It also prints the transit parameters.
+    Calculates the period of a periodic signal in the input flux data. It first
+    calculates the periodogram using the SciPy signal processing library's
+    periodogram function. Then, it finds the frequency with the highest power
+    (i.e. the dominant frequency) and calculates the period corresponding to
+    that frequency. Finally, it plots the periodogram and saves the plot as
+    'Periodogram.png' in the 'Plots' folder.
 
     Parameters:
-    - time (1D array): Time values.
     - flux (1D array): Flux values.
-    - params (1D array): Variability and transit parameters.
 
     Returns:
-    - flux_nv (1D array): Flux values with the variability subtracted.
-    
+    - period (float): The period of the periodic signal in the flux data.
+
     Plots:
-    Generates a plot of the filtered flux data w/o the stellar variability.
-    The plot is saved in 'Plots' as 'Discarded Variability.png'
+    Generates a plot of the power spectrum. The plot is saved in 'Plots' as
+    'Periodogram.png'.
     """
     
-    # Variability amplitude
-    A: float = params[0]
+    # Calculate the periodogram
+    frequencies, power_spectrum = sc.signal.periodogram(flux)
     
-    # Variability period
-    P_v: float = params[1]
-    
-    # Variability phase
-    Phase_v: float = params[2]
-    
-    # Variability offset
-    Offset_v: float = params[3]
-    
-    # Print planet's period
-    print(f"\nThe planet period is {params[5]} days.")
-    
-    # Print planet's half-time transit
-    print(f"The planet half-time transit is {params[4]} days.")
-    
-    # Print planet's transit duration
-    print(f"The planet's transit duration is {params[6]} days.")
-    
-    # Print planet's transit depth
-    print(f"The planet's transit depth is {params[7]}.")
-    
-    # Compute the variability
-    variability: np.array(float)
-    variability = A*np.sin(time/P_v+Phase_v)+Offset_v
-    
-    # Compute the flux values with the variability subtracted
-    flux_nv: np.array(float)
-    flux_nv = flux-variability
-    
-    # Plot the star's light curve without variability
+    # Plot the periodogram
     plt.figure()
-    plt.plot(time, flux_nv, marker='.')
-    plt.xlabel('Time (days)')
-    plt.ylabel('Flux')
-    plt.title("Star's light curve w/o stellar varibility")
+    plt.plot(frequencies, power_spectrum)
     plt.grid(True)
-    plt.savefig('../Plots/Discarded Variability.png')
+    plt.xlabel(r'Frequency [days$^{-1}$]')
+    plt.ylabel('Power Spectrum')
+    plt.title('Periodogram')
+    plt.savefig('../Plots/Periodogram.png')
     
-    # Return the flux values with the variability subtracted
-    return flux_nv
+    # Find the frequency with the highest power (i.e. the dominant frequency)
+    dominant_frequency = frequencies[np.argmax(power_spectrum)]
+    
+    # Calculate the period corresponding to the dominant frequency
+    period = 1/dominant_frequency
+    
+    return period
+
+def characterization(time, flux):
+    
+    """
+    This function characterizes an exoplanet based on its light curve, taking
+    into account the stellar variability.
+
+    Parameters:
+    - time (1D array): Time array of the light curve.
+    - flux (1D array): Flux array of the light curve.
+
+    Returns:
+    
+    - None
+    
+    Uses:
+        
+    - get_period():
+    """
+    
+    period: float = get_period(flux)
+    
+    # Computes the planet's radius using transits's law
+    stellar_radius: float
+    stellar_radius = float(input(r"Star's radius (R☉): "))
+    transit_depth: float = np.max(flux) - np.min(flux)
+    planet_radius: float = np.sqrt(transit_depth) * stellar_radius
+    
+    # Computes the planet-star distance using Kepler's law
+    G = 6.67430e-11 # Constante gravitacional
+    M_star: float
+    M_star = float(input(r"Star's mass (M☉): "))
+    a = ((period/(2*np.pi))**2*G*M_star)**(1/3)
+    distance_to_star = a*149.6e6 # Distancia en km
+    
+    # Orbital inclination determination
+    inclination = np.arccos(np.sqrt(abs(np.max(flux)+np.min(flux))/\
+                                    (2*np.mean(flux))))/np.pi    
+    if str(inclination)=='nan':
+        
+        inclination = 0.5
+    
+    # Print results
+    print(f'\nPeriod: {period} days.')
+    print(f"Planet's radius: {planet_radius:.2f} R🜨.")
+    print(f'Planet-Star distance: {distance_to_star:.2f} km.')
+    print(f'Orbit inclination: {inclination:.2f}π rad.')

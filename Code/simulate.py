@@ -14,8 +14,9 @@ distribution with user-specified parameters. The final light curve is obtained
 by adding the transit, variability, and noise together.
 
 The sinusoidal_variability function generates a sinusoidal variability given the
-amplitude, period, phase, and offset of the variability. The function returns an
-array of flux values corresponding to the input time values.
+amplitude, period and phase of the variability, and the stellar flux offset.
+The function returns an array of flux values corresponding to the input time
+values.
 
 The generate_parabolic_transit function generates a parabolic transit signal
 that repeats every period. The parabolic transit is specified by the transit
@@ -33,6 +34,12 @@ final light curve is obtained by adding the transit, variability, and noise
 together. The function returns an array of time values and an array of simulated
 flux values. The function also generates a plot of the simulated transit flux
 data and a plot of the simulated flux data.
+
+The discard_planet function was developed by Jacob Robnik and Uroš Seljak,
+published at their article 'Kepler Data Analysis: Non-Gaussian Noise and Fourier
+Gaussian Process Analysis of Stellar Variability' and shared in their GitHub
+repository (https://github.com/JakobRobnik/Kepler-Data-Analysis) in code named
+'noise.py'.
 """
 
 # Do all the imports
@@ -42,8 +49,8 @@ import scipy as sc
 from typing import List
 
 """
-Functions 'simulate_noise', 'discard_planet' and 'fit_pdf' were developed by Jakkob Robnik
-and Uroš Seljak. This functions have been copy-pasted from their shared code.
+Function 'simulate_noise' was developed by Jakkob Robnik and Uroš Seljak. This
+function has been copy-pasted from their shared code.
 """
 
 def simulate_noise(N, params):
@@ -72,16 +79,16 @@ def sinusoidal_variability(time, amplitude, period, phase, offset):
     - amplitude (float): Amplitude of the variability.
     - period (float): Period of the variability (in days).
     - phase (float): Phase of the variability (in radians).
-    - offset (float): Offset of the variability.
+    - offset (float): Offset of the stellar flux.
 
     Returns:
     - flux (1D array): Array of flux values corresponding to the input
-                              time values.
+                       time values.
     """
 
     flux: np.array(float)
 
-    flux = amplitude * np.sin(2 * np.pi / period * time + phase) + offset
+    flux = amplitude*np.sin(2*np.pi/period*time+phase)+offset
 
     return flux
 
@@ -101,13 +108,13 @@ def generate_parabolic_transit(period, t0, duration, depth, t):
                    signal.
     """
     
-    phase: np.array(float) = ((t - t0 + 0.5*period) % period) - 0.5*period
+    phase: np.array(float) = ((t-t0+0.5*period)%period)-0.5*period
     
-    f: np.array(float) = depth * (1 - 4 * phase**2 / duration**2)
+    f: np.array(float) = depth*(1-4*phase**2/duration**2)
     
-    f[f < 0] = 0
+    f[f<0] = 0
     
-    return 5e6 - f
+    return -f
 
 def sim_flux(noise_params):
     """
@@ -140,12 +147,12 @@ def sim_flux(noise_params):
     - simulate_noise()
     """
 
-    t_period: float = float(input('Transit period: '))#2.5
-    t_duration: float = float(input('Transit duration: '))#0.5
-    t0: float = float(input('Transit half time: '))#0.25
-    depth: float = float(input('Transit depth: '))#5
-    t_start: float = float(input('Initial time: '))#0
-    t_end: float = float(input('Ending time: '))#50
+    t_period: float = float(input('Transit period: '))
+    t_duration: float = float(input('Transit duration: '))
+    t0: float = float(input('Transit half time: '))
+    depth: float = float(input('Transit depth: '))
+    t_start: float = float(input('Initial time: '))
+    t_end: float = float(input('Ending time: '))
 
     time: np.array(float) = np.linspace(t_start, t_end, 100000)
 
@@ -166,7 +173,7 @@ def sim_flux(noise_params):
     amplitude: float = float(input('Sinusoidal variability amplitude: '))#2
     period: float = float(input('Sinusoidal variability period: '))#7
     phase: float = float(input('Sinusoidal variability phase (in units of π): '))
-    offset: float = float(input('Sinusoidal variability offset: '))#0
+    offset: float = float(input('Stellar flux offset (order of magnitude): '))
 
     variability: np.array(float)
     variability = sinusoidal_variability(time, amplitude, period, phase*np.pi,\
@@ -216,19 +223,19 @@ def data_maker():
     """
 
     A: float
-    A = float(input('Outlier fraction: '))#0.3
+    A = float(input('Outlier fraction: '))
 
     df: float  
-    df = float(input("Non-central Student's t distribution degrees of freedom: "))#3
+    df = float(input("Non-central Student's t distribution degrees of freedom: "))
     
     nc: float
-    nc = float(input("Non-central paarameter: "))#1
+    nc = float(input("Non-central paarameter: "))
 
     loc: float
-    loc = float(input("Non-central Student's t distribution mean value: "))#0
+    loc = float(input("Non-central Student's t distribution mean value: "))
 
     scale: float
-    scale = float(input("Non-central Student's t distribution scale: "))#1
+    scale = float(input("Non-central Student's t distribution scale: "))
 
     params: List[float]
     params = [A, df, nc, loc, scale]
