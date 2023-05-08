@@ -177,7 +177,7 @@ def get_period(flux, sampling_f):
 
     Parameters:
     - flux (1D array): Flux values.
-    - sampling_f (float): Sampling frequency
+    - sampling_f (float): Sampling frequency.
 
     Returns:
     - period (float): The period of the periodic signal in the flux data.
