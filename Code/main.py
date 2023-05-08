@@ -102,16 +102,5 @@ def main():
     # Discard the variability from the star's light curve
     flux_nv: np.array(float)
     flux_nv = remove.discard_variability(time, filtered_flux, best_fit_params)
-    """
-    # Save the cleaned time and flux values in a text file
-    with open('data.txt', 'w') as f:
-        
-        f.write('x    y\n')
-        
-        for i in range(len(time)):
-            
-            f.write(f'{time[i]}    {flux_nv[i]}\n')
-            
-    f.close()
-    """
+    
     analize.characterization(time, flux_nv)
