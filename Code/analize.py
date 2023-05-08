@@ -119,36 +119,12 @@ def best_fit_func(x, a, b, c, d):#, t0, p, dur, dep, m):
     - b (float): The period of the sinusoidal signal.
     - c (float): The phase of the sinusoidal signal.
     - d (float): The offset of the stellar flux.
-    - t0 (float): The time of the center of the transit.
-    - p (float): The period of the transit.
-    - dur (float): The duration of the transit.
-    - dep (float): The depth of the transit.
     
     Returns:
     - f (1D array): The modeled light curve.
     """
-    """
-    # Calculate the phase of the transit
-    phase: np.array(float) = ((x - t0 + 0.5*p) % p) - 0.5*p
     
-    # Calculate the depth of the transit as a function of phase
-    f: np.array(float) = dep * (1 - 4 * phase**2 / dur**2)
-    
-    # Loop over each data point and apply the transit model to the sinusoidal model
-    for i in range(len(f)):
-        
-        if f[i]<0:
-            
-            # If the transit depth is negative, return only the sinusoidal
-            # signal
-            return a*np.sin(x/b+c*np.pi)+500
-            
-        else:
-            
-            # If the transit depth is positive, add the transit model to the
-            # sinusoidal model
-    """    
-    return a*np.sin(2*np.pi*x/b+c*np.pi)+d#-dep*(1-4*(((x-t0+0.5*p)%p)-0.5*p)**2/dur**2)
+    return a*np.sin(2*np.pi*x/b+c*np.pi)+d
 
 def best_fit(x, y):
     """
@@ -232,7 +208,6 @@ def get_period(flux, sampling_f):
     return period
 
 def characterization(time, flux):
-    
     """
     This function characterizes an exoplanet based on its light curve, taking
     into account the stellar variability.
