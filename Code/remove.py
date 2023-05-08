@@ -48,7 +48,7 @@ def discard_variability(time, flux, params):
     
     Plots:
     Generates a plot of the filtered flux data w/o the stellar variability.
-    The plot is saved in 'Plots' as 'Discarded Variability.png'
+    The plot is saved in 'Plots' as 'Discarded Variability.pdf'
     """
     
     # Variability amplitude
@@ -59,10 +59,10 @@ def discard_variability(time, flux, params):
     
     # Variability phase
     Phase_v: float = params[2]
-    
+    """
     # Variability offset
     Offset_v: float = params[3]
-    """
+
     # Print planet's period
     print(f"\nThe planet period is {params[5]} days.")
     
@@ -77,7 +77,7 @@ def discard_variability(time, flux, params):
     """
     # Compute the variability
     variability: np.array(float)
-    variability = A*np.sin(2*np.pi*time/P_v+Phase_v*np.pi)+Offset_v
+    variability = A*np.sin(2*np.pi*time/P_v+Phase_v*np.pi)
     
     # Compute the flux values with the variability subtracted
     flux_nv: np.array(float)
@@ -90,7 +90,7 @@ def discard_variability(time, flux, params):
     plt.ylabel('Flux')
     plt.title("Star's cleaned light curve (w/o stellar varibility)")
     plt.grid(True)
-    plt.savefig('../Plots/Cleaned Light Curve.png')
+    plt.savefig('../Plots/Cleaned Light Curve.pdf')
     
     # Return the flux values with the variability subtracted
     return flux_nv

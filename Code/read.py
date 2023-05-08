@@ -24,7 +24,7 @@ def read_data(file):
     
     Plots:
     Generates a plot of the read transit flux data.
-    The plot is saved in 'Plots' as 'Read Transit.png'
+    The plot is saved in 'Plots' as 'Read Transit.pdf'
     """
     
     # Read the data from the file
@@ -41,7 +41,7 @@ def read_data(file):
     plt.ylabel('Flux')
     plt.title('Read Flux')
     plt.grid(True)
-    plt.savefig('../Plots/Total Flux.png')
+    plt.savefig('../Plots/Total Flux.pdf')
     
     # Return the time and flux values
     return(time, flux)

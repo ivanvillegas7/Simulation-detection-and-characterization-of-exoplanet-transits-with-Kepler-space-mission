@@ -33,7 +33,7 @@ flux data. It first calculates the periodogram using the SciPy signal processing
 library's periodogram function. Then, it finds the frequency with the highest
 power (i.e. the dominant frequency) and calculates the period corresponding to
 that frequency. Finally, it plots the periodogram and saves the plot as
-'Periodogram.png' in the 'Plots' folder.
+'Periodogram.pdf' in the 'Plots' folder.
 
 The time_convert function takes a single argument, seconds, which is the total
 number of seconds to be converted into days, hours, minutes, and seconds. The
@@ -77,9 +77,9 @@ def median_filter(time: np.array(float), flux: np.array(float),\
 
     Plots:
     Generates a plot of the original flux data and the filtered flux data.
-    The plot is saved in 'Plots' as 'Flux Comparison.png'
+    The plot is saved in 'Plots' as 'Flux Comparison.pdf'
     Generates a plot of the filtered flux data.
-    The plot is saved in 'Plots' as 'Filtered Flux.png'
+    The plot is saved in 'Plots' as 'Filtered Flux.pdf'
     """
 
     # Apply median filter to flux array
@@ -95,7 +95,7 @@ def median_filter(time: np.array(float), flux: np.array(float),\
     plt.title('Flux comparison')
     plt.legend()
     plt.grid(True)
-    plt.savefig('../Plots/Flux Comparison.png')
+    plt.savefig('../Plots/Flux Comparison.pdf')
     
     # Plot the filtered flux data
     plt.figure()
@@ -104,11 +104,11 @@ def median_filter(time: np.array(float), flux: np.array(float),\
     plt.ylabel('Flux')
     plt.title('Filtered flux')
     plt.grid(True)
-    plt.savefig('../Plots/Filtered Flux.png')
+    plt.savefig('../Plots/Filtered Flux.pdf')
 
     return filtered_flux
 
-def best_fit_func(x, a, b, c, d, t0, p, dur, dep, m):
+def best_fit_func(x, a, b, c, d):#, t0, p, dur, dep, m):
     """
     A function that models the light curve of a star with a transit and a
     sinusoidal signal.
@@ -141,14 +141,13 @@ def best_fit_func(x, a, b, c, d, t0, p, dur, dep, m):
             
             # If the transit depth is negative, return only the sinusoidal
             # signal
-            return a*np.sin(x/b+c*np.pi)+d
+            return a*np.sin(x/b+c*np.pi)+500
             
         else:
             
             # If the transit depth is positive, add the transit model to the
             # sinusoidal model
-    """
-            
+    """    
     return a*np.sin(2*np.pi*x/b+c*np.pi)+d#-dep*(1-4*(((x-t0+0.5*p)%p)-0.5*p)**2/dur**2)
 
 def best_fit(x, y):
@@ -168,12 +167,12 @@ def best_fit(x, y):
     
     Plots:
     Generates a plot of the filtered flux data and its best fit.
-    The plot is saved in 'Plots' as 'Best Fit.png'.
+    The plot is saved in 'Plots' as 'Best Fit.pdf'.
     """
     
     # Use curve_fit to find the best fit
-    popt, pcov = sc.optimize.curve_fit(best_fit_func, x, y)#,\
-                                       #p0=np.array([2, 7, 1, 0]))
+    popt, pcov = sc.optimize.curve_fit(best_fit_func, x, y,\
+                                       p0=np.array([2, 7, 1, 0]))
     """
     print(popt)
     print(pcov)
@@ -187,32 +186,33 @@ def best_fit(x, y):
     plt.title("Star's light curve w/ best fit for stellar varibility")
     plt.legend()
     plt.grid(True)
-    plt.savefig('../Plots/Best Fit.png')
+    plt.savefig('../Plots/Best Fit.pdf')
     
     return popt
 
-def get_period(flux):
+def get_period(flux, sampling_f):
     """
     Calculates the period of a periodic signal in the input flux data. It first
     calculates the periodogram using the SciPy signal processing library's
     periodogram function. Then, it finds the frequency with the highest power
     (i.e. the dominant frequency) and calculates the period corresponding to
     that frequency. Finally, it plots the periodogram and saves the plot as
-    'Periodogram.png' in the 'Plots' folder.
+    'Periodogram.pdf' in the 'Plots' folder.
 
     Parameters:
     - flux (1D array): Flux values.
+    - sampling_f (float)
 
     Returns:
     - period (float): The period of the periodic signal in the flux data.
 
     Plots:
     Generates a plot of the power spectrum. The plot is saved in 'Plots' as
-    'Periodogram.png'.
+    'Periodogram.pdf'.
     """
     
     # Calculate the periodogram
-    frequencies, power_spectrum = sc.signal.periodogram(flux)
+    frequencies, power_spectrum = sc.signal.periodogram(flux, sampling_f)
     
     # Plot the periodogram
     plt.figure()
@@ -221,7 +221,7 @@ def get_period(flux):
     plt.xlabel(r'Frequency [days$^{-1}$]')
     plt.ylabel('Power Spectrum')
     plt.title('Periodogram')
-    plt.savefig('../Plots/Periodogram.png')
+    plt.savefig('../Plots/Periodogram.pdf')
     
     # Find the frequency with the highest power (i.e. the dominant frequency)
     dominant_frequency = frequencies[np.argmax(power_spectrum)]
@@ -250,20 +250,20 @@ def characterization(time, flux):
     - get_period():
     """
     
-    period: float = get_period(flux)
-    
+    period: float = get_period(flux, 1/(time[1]-time[0]))
+
     # Computes the planet's radius using transits's law
     stellar_radius: float
     stellar_radius = float(input(r"Star's radius (R☉): "))
-    transit_depth: float = np.max(flux) - np.min(flux)
-    planet_radius: float = np.sqrt(transit_depth) * stellar_radius
+    transit_depth: float = (np.max(flux) - np.min(flux))/np.mean(flux)
+    planet_radius: float = np.sqrt(transit_depth)*stellar_radius*6.957e5/6371
     
     # Computes the planet-star distance using Kepler's law
-    G = 6.67430e-11 # Constante gravitacional
+    G = 6.67430e-11 # Gravitational constant
     M_star: float
     M_star = float(input(r"Star's mass (M☉): "))
-    a = ((period/(2*np.pi))**2*G*M_star)**(1/3)
-    distance_to_star = a*149.6e6 # Distancia en km
+    a = ((period*24*60*60/(2*np.pi))**2*G*M_star)**(1/3)
+    distance_to_star = a*149.6e6 # Distance in km
     
     # Orbital inclination determination
     inclination = np.arccos(np.sqrt(abs(np.max(flux)+np.min(flux))/\
@@ -272,8 +272,15 @@ def characterization(time, flux):
         
         inclination = 0.5
     
+    # Computes the planet's temperature
+    stellar_temp: float
+    stellar_temp = float(input(r"Star's temperature (K): "))
+    planet_temp = stellar_temp*np.sqrt(stellar_radius*6.957e5/\
+                                       (2*distance_to_star))
+    
     # Print results
-    print(f'\nPeriod: {period} days.')
+    print(f'\nPeriod: {period:.2f} days.')
     print(f"Planet's radius: {planet_radius:.2f} R🜨.")
     print(f'Planet-Star distance: {distance_to_star:.2f} km.')
     print(f'Orbit inclination: {inclination:.2f}π rad.')
+    print(f"Planet's temperature: {planet_temp:.2f} K.")

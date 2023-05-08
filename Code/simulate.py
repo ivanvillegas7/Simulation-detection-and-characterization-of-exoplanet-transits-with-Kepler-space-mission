@@ -137,9 +137,9 @@ def sim_flux(noise_params):
 
     Plots:
     Generates a plot of the simulated transit flux data.
-    The plot is saved in 'Plots' as 'Simulated Transit.png'
+    The plot is saved in 'Plots' as 'Simulated Transit.pdf'
     Generates a plot of the simulated flux data.
-    The plot is saved in 'Plots' as 'Simulated Flux.png'
+    The plot is saved in 'Plots' as 'Simulated Flux.pdf'
             
     Uses:
     - generate_parabolic_transit()
@@ -167,7 +167,7 @@ def sim_flux(noise_params):
     plt.ylabel('Flux')
     plt.title('Simulated Transit')
     plt.grid(True)
-    plt.savefig('../Plots/Simulated Transit.png')
+    plt.savefig('../Plots/Simulated Transit.pdf')
 
     # Generate sinusoidal variability
     amplitude: float = float(input('Sinusoidal variability amplitude: '))#2
@@ -194,7 +194,7 @@ def sim_flux(noise_params):
     plt.ylabel('Flux')
     plt.title('Simulated Flux')
     plt.grid(True)
-    plt.savefig('../Plots/Total Flux.png')
+    plt.savefig('../Plots/Total Flux.pdf')
 
     return(time, flux)
 
