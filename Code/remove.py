@@ -18,10 +18,6 @@ returns the resulting flux values. The parameters in params are as follows:
     ·params[1]: variability period P_v
     ·params[2]: variability phase Phase_v (in units of pi)
     ·params[3]: variability offset Offset_v
-    ·params[4]: half-time transit duration of the planet half_time_transit
-    ·params[5]: planet period period
-    ·params[6]: planet transit duration
-    ·params[7]: planet transit depth
     
 The function computes the variability of the star using a sinusoidal model with
 the specified parameters, and subtracts it from the flux values to obtain the
@@ -59,22 +55,7 @@ def discard_variability(time, flux, params):
     
     # Variability phase
     Phase_v: float = params[2]
-    """
-    # Variability offset
-    Offset_v: float = params[3]
-
-    # Print planet's period
-    print(f"\nThe planet period is {params[5]} days.")
     
-    # Print planet's half-time transit
-    print(f"The planet half-time transit is {params[4]} days.")
-    
-    # Print planet's transit duration
-    print(f"The planet's transit duration is {params[6]} days.")
-    
-    # Print planet's transit depth
-    print(f"The planet's transit depth is {params[7]}.")
-    """
     # Compute the variability
     variability: np.array(float)
     variability = A*np.sin(2*np.pi*time/P_v+Phase_v*np.pi)
