@@ -1,4 +1,4 @@
-# Título por determinar
+# Simulation, detection, and characterization of exoplanet transits with Kepler space mission
 
 This will be my final degree project's (TFG in Spanish) repository.
 
