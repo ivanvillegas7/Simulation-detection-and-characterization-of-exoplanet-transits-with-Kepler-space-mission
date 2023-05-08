@@ -123,7 +123,7 @@ def best_fit_func(x, a, b, c, d):#, t0, p, dur, dep, m):
     Returns:
     - f (1D array): The modeled light curve.
     """
-    
+   
     return a*np.sin(2*np.pi*x/b+c*np.pi)+d
 
 def best_fit(x, y):
@@ -149,10 +149,7 @@ def best_fit(x, y):
     # Use curve_fit to find the best fit
     popt, pcov = sc.optimize.curve_fit(best_fit_func, x, y,\
                                        p0=np.array([2, 7, 1, 0]))
-    """
-    print(popt)
-    print(pcov)
-    """
+
     # Plot data and its best fit
     plt.figure()
     plt.plot(x, y, 'o', label='Data')
@@ -208,6 +205,7 @@ def get_period(flux, sampling_f):
     return period
 
 def characterization(time, flux):
+    
     """
     This function characterizes an exoplanet based on its light curve, taking
     into account the stellar variability.
@@ -217,11 +215,9 @@ def characterization(time, flux):
     - flux (1D array): Flux array of the light curve.
 
     Returns:
-    
     - None
     
-    Uses:
-        
+    Uses:   
     - get_period():
     """
     

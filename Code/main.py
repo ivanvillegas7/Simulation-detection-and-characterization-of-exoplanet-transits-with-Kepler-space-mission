@@ -102,5 +102,5 @@ def main():
     # Discard the variability from the star's light curve
     flux_nv: np.array(float)
     flux_nv = remove.discard_variability(time, filtered_flux, best_fit_params)
-    
+
     analize.characterization(time, flux_nv)
