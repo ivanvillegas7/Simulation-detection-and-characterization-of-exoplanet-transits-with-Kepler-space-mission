@@ -63,7 +63,6 @@ import scipy as sc
 
 def median_filter(time: np.array(float), flux: np.array(float),\
                   window_size: int):
-
     """
     Applies a median filter of a given window size to a flux array.
 
@@ -152,7 +151,7 @@ def best_fit(x, y):
 
     # Plot data and its best fit
     plt.figure()
-    plt.plot(x, y, 'o', label='Data')
+    plt.plot(x, y, marker='o', label='Data')
     plt.plot(x, best_fit_func(x, *popt), label='Best fit')
     plt.xlabel('Time (days)')
     plt.ylabel('Flux')
@@ -205,7 +204,6 @@ def get_period(flux, sampling_f):
     return period
 
 def characterization(time, flux):
-    
     """
     This function characterizes an exoplanet based on its light curve, taking
     into account the stellar variability.

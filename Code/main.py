@@ -36,7 +36,6 @@ import analize
 import remove
 
 def main():
-
     """
     Executes the main program for filtering and analyzing star's light curve.
     It calls the 'data_maker' function to generate simulated data or the
