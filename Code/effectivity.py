@@ -283,10 +283,6 @@ def effectivity(i: int):
         err_mean.append(np.mean(err))
         
         err_bar.append(conf_level.confidence_limits(err, 0.68))
-        
-        if i==2:
-        
-            print(period[j])
 
     plt.figure()
     plt.ylabel('Relative error on the transit period determination')
