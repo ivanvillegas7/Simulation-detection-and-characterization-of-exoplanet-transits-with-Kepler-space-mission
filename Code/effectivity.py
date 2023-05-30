@@ -345,8 +345,6 @@ def effectivity(i: int):
         plt.xlabel('Noise intensity')
         plt.title('Relative error against noise intensity')
         plt.savefig('../Plots/Effectivity/REvsNI.pdf')
-        
-    import updates
 
 def get_effectivity():
     """
@@ -364,12 +362,3 @@ def get_effectivity():
     for i in range(6):
 
         effectivity(i)
-
-#%%
-effectivity(0)
-#%%
-effectivity(2)
-#%%
-effectivity(4)
-#%%
-effectivity(5)
