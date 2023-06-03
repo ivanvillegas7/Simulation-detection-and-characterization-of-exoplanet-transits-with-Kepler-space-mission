@@ -63,7 +63,7 @@ def discard_variability(time, flux, params):
     # Compute the flux values with the variability subtracted
     flux_nv: np.array(float)
     flux_nv = flux-variability
-    '''
+    
     # Plot the star's cleaned light curve (without variability)
     plt.figure()
     plt.plot(time, flux_nv, marker='.')
@@ -72,6 +72,6 @@ def discard_variability(time, flux, params):
     plt.title("Star's cleaned light curve (w/o stellar varibility)")
     plt.grid(True)
     plt.savefig('../Plots/Cleaned Light Curve.pdf')
-    '''
+    
     # Return the flux values with the variability subtracted
     return flux_nv
