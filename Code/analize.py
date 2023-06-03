@@ -84,7 +84,7 @@ def median_filter(time: np.array(float), flux: np.array(float),\
     # Apply median filter to flux array
     filtered_flux: np.array(float)
     filtered_flux = sc.signal.medfilt(flux, kernel_size=window_size)
-    '''
+    
     # Plot the filtered and unfiltered flux
     plt.figure()
     plt.plot(time, flux, marker='.', label='Original data', ls='none')
@@ -104,7 +104,7 @@ def median_filter(time: np.array(float), flux: np.array(float),\
     plt.title('Filtered flux')
     plt.grid(True)
     plt.savefig('../Plots/Filtered Flux.pdf')
-    '''
+    
     return filtered_flux
 
 def best_fit_func(x, a, b, c, d):#, t0, p, dur, dep, m):
@@ -148,7 +148,7 @@ def best_fit(x, y):
     # Use curve_fit to find the best fit
     popt, pcov = sc.optimize.curve_fit(best_fit_func, x, y,\
                                        p0=np.array([2, 7, 1, 0]))
-    '''
+    
     # Plot data and its best fit
     plt.figure()
     plt.plot(x, y, marker='o', label='Data')
@@ -159,7 +159,7 @@ def best_fit(x, y):
     plt.legend()
     plt.grid(True)
     plt.savefig('../Plots/Best Fit.pdf')
-    '''
+    
     return popt
 
 def get_period(flux, sampling_f):
@@ -185,7 +185,7 @@ def get_period(flux, sampling_f):
     
     # Calculate the periodogram
     frequencies, power_spectrum = sc.signal.periodogram(flux, sampling_f)
-    '''
+    
     # Plot the periodogram
     plt.figure()
     plt.plot(frequencies, power_spectrum)
@@ -194,7 +194,7 @@ def get_period(flux, sampling_f):
     plt.ylabel('Power Spectrum (a.u.)')
     plt.title('Periodogram')
     plt.savefig('../Plots/Periodogram.pdf')
-    '''
+    
     # Find the frequency with the highest power (i.e. the dominant frequency)
     dominant_frequency = frequencies[np.argmax(power_spectrum)]
     
