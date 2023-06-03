@@ -105,15 +105,6 @@ def main():
 
         # Generate the time and flux data for the star's light curve
         time, flux = simulate.data_maker()
-        """
-        with open('../simulated.txt', 'w') as f:
-            
-            f.write('Time   Filtered Flux')
-            
-            for i in range(len(time)):
-                
-                f.write(f'\n{time[i]}   {filtered_flux[i]}')
-        """
         
     else:
         
@@ -128,15 +119,7 @@ def main():
     filtered_flux: np.array(float)
     window_size: int = int(input('Window size for the median filter (~101): '))
     filtered_flux = analize.median_filter(time, flux, window_size)
-    """
-    with open('../data.txt', 'w') as f:
-        
-        f.write('Time   Filtered Flux')
-        
-        for i in range(len(time)):
-            
-            f.write(f'\n{time[i]}   {filtered_flux[i]}')
-    """
+    
     # Fit the filtered flux data to a curve
     best_fit_params: np.array(float)
     best_fit_params = analize.best_fit(time, filtered_flux)
@@ -144,15 +127,7 @@ def main():
     # Discard the variability from the star's light curve
     flux_nv: np.array(float)
     flux_nv = remove.discard_variability(time, filtered_flux, best_fit_params)
-    """
-    with open('../cleaned *.txt', 'w') as f: # *: name to identify
-        
-        f.write('Time   Filtered Flux')
-        
-        for i in range(len(time)):
-            
-            f.write(f'\n{time[i]}   {filtered_flux[i]}')
-    """
+    
     period: float = analize.get_period(flux_nv, 1/(time[1]-time[0]))
     
     analize.characterization(time, flux, period)
