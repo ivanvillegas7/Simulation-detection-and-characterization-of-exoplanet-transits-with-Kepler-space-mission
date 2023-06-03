@@ -291,10 +291,6 @@ def effectivity(i: int):
         err_bar_low.append(err_bar[0])
         
         err_bar_up.append(err_bar[1])
-        
-        if i==2:
-        
-            print(period[j])
             
     N: np.array(List[float]) = np.array(np.array(err_bar_low),\
                                         np.array(err_bar_up))
@@ -344,8 +340,6 @@ def effectivity(i: int):
         plt.xlabel('Noise intensity')
         plt.title('Relative error against noise intensity')
         plt.savefig('../Plots/Effectivity/REvsNI.pdf')
-        
-    import updates
 
 def get_effectivity():
     """
@@ -363,4 +357,3 @@ def get_effectivity():
     for i in range(6):
         
         effectivity(i)
-effectivity(2)
