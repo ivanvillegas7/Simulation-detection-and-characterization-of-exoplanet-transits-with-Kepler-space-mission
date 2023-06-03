@@ -38,7 +38,7 @@ def read_data(file):
     plt.figure()
     plt.plot(time, flux, marker='.', ls='none')
     plt.xlabel('Time (days)')
-    plt.ylabel('Flux')
+    plt.ylabel('Signal (a.u.)')
     plt.title('Read Flux')
     plt.grid(True)
     plt.savefig('../Plots/Total Flux.pdf')

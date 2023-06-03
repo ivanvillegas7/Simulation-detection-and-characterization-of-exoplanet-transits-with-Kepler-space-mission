@@ -84,13 +84,13 @@ def median_filter(time: np.array(float), flux: np.array(float),\
     # Apply median filter to flux array
     filtered_flux: np.array(float)
     filtered_flux = sc.signal.medfilt(flux, kernel_size=window_size)
-
+    '''
     # Plot the filtered and unfiltered flux
     plt.figure()
     plt.plot(time, flux, marker='.', label='Original data', ls='none')
     plt.plot(time, filtered_flux, marker='.', label='Filtered data', ls='none')
     plt.xlabel('Time (days)')
-    plt.ylabel('Flux')
+    plt.ylabel('Signal (a.u.)')
     plt.title('Flux comparison')
     plt.legend()
     plt.grid(True)
@@ -100,11 +100,11 @@ def median_filter(time: np.array(float), flux: np.array(float),\
     plt.figure()
     plt.plot(time, filtered_flux, marker='.')
     plt.xlabel('Time (days)')
-    plt.ylabel('Flux')
+    plt.ylabel('Signal (a.u.)')
     plt.title('Filtered flux')
     plt.grid(True)
     plt.savefig('../Plots/Filtered Flux.pdf')
-
+    '''
     return filtered_flux
 
 def best_fit_func(x, a, b, c, d):#, t0, p, dur, dep, m):
@@ -148,18 +148,18 @@ def best_fit(x, y):
     # Use curve_fit to find the best fit
     popt, pcov = sc.optimize.curve_fit(best_fit_func, x, y,\
                                        p0=np.array([2, 7, 1, 0]))
-
+    '''
     # Plot data and its best fit
     plt.figure()
     plt.plot(x, y, marker='o', label='Data')
     plt.plot(x, best_fit_func(x, *popt), label='Best fit')
     plt.xlabel('Time (days)')
-    plt.ylabel('Flux')
+    plt.ylabel('Signal (a.u.)')
     plt.title("Star's light curve w/ best fit for stellar varibility")
     plt.legend()
     plt.grid(True)
     plt.savefig('../Plots/Best Fit.pdf')
-    
+    '''
     return popt
 
 def get_period(flux, sampling_f):
@@ -185,16 +185,16 @@ def get_period(flux, sampling_f):
     
     # Calculate the periodogram
     frequencies, power_spectrum = sc.signal.periodogram(flux, sampling_f)
-    
+    '''
     # Plot the periodogram
     plt.figure()
     plt.plot(frequencies, power_spectrum)
     plt.grid(True)
-    plt.xlabel(r'Frequency [days$^{-1}$]')
-    plt.ylabel('Power Spectrum')
+    plt.xlabel(r'Frequency (days$^{-1}$)')
+    plt.ylabel('Power Spectrum (a.u.)')
     plt.title('Periodogram')
     plt.savefig('../Plots/Periodogram.pdf')
-    
+    '''
     # Find the frequency with the highest power (i.e. the dominant frequency)
     dominant_frequency = frequencies[np.argmax(power_spectrum)]
     
@@ -203,7 +203,7 @@ def get_period(flux, sampling_f):
     
     return period
 
-def characterization(time, flux):
+def characterization(time, flux, period):
     """
     This function characterizes an exoplanet based on its light curve, taking
     into account the stellar variability.
@@ -211,20 +211,16 @@ def characterization(time, flux):
     Parameters:
     - time (1D array): Time array of the light curve.
     - flux (1D array): Flux array of the light curve.
+    - period (float): Period of the exoplanet's transit.'
 
     Returns:
     - None
-    
-    Uses:   
-    - get_period():
     """
-    
-    period: float = get_period(flux, 1/(time[1]-time[0]))
 
     # Computes the planet's radius using transits's law
     stellar_radius: float
     stellar_radius = float(input(r"Star's radius (R☉): "))
-    transit_depth: float = (np.max(flux) - np.min(flux))/np.mean(flux)
+    transit_depth: float = (np.mean(flux) - np.min(flux))/np.mean(flux)
     planet_radius: float = np.sqrt(transit_depth)*stellar_radius*6.957e5/6371
     
     # Computes the planet-star distance using Kepler's law
@@ -235,7 +231,7 @@ def characterization(time, flux):
     distance_to_star = a*149.6e6 # Distance in km
     
     # Orbital inclination determination
-    inclination = np.arccos(np.sqrt(abs(np.max(flux)+np.min(flux))/\
+    inclination = np.arccos(np.sqrt(abs(np.mean(flux)+np.min(flux))/\
                                     (2*np.mean(flux))))/np.pi    
     if str(inclination)=='nan':
         

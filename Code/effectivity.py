@@ -139,99 +139,103 @@ def effectivity(i: int):
     The plots are saved in the "Plots/Effectivity" directory.
     """
 
+    n: int = 100
+
     if i==0:
 
-        depth: np.array(float) = np.linspace(0, 5, 1000)
+        depth: np.array(float) = np.linspace(0, 5, n)
 
-        amplitude: np.array(float) = 2*np.ones(1000)
+        amplitude: np.array(float) = 2*np.ones(n)
 
         period: float = 7
 
         phase: float = 1
 
-        t_per: np.array(float) = 2.5*np.ones(1000)
+        t_per: np.array(float) = 2.5*np.ones(n)
         
         noise: float = 1
 
     elif i==1:
 
-        depth: np.array(float) = 5*np.ones(100)
+        depth: np.array(float) = 5*np.ones(n)
 
-        amplitude: np.array(float) = np.linspace(0, 5, 100)
+        amplitude: np.array(float) = np.linspace(0, 5, n)
 
         period: float = 7
 
         phase: float = 1
 
-        t_per: np.array(float) = 2.5*np.ones(100)
+        t_per: np.array(float) = 2.5*np.ones(n)
         
         noise: float = 1
 
     elif i==2:
 
-        depth: np.array(float) = 5*np.ones(1000)
+        depth: np.array(float) = 5*np.ones(n)
 
-        amplitude: np.array(float) = 2*np.ones(1000)
+        amplitude: np.array(float) = 2*np.ones(n)
 
-        period: np.array(float) = np.linspace(0.01, 15, 1000)
+        period: np.array(float) = np.linspace(3.5, 10.5, n)
 
         phase: float = 1
 
-        t_per: np.array(float) = 2.5*np.ones(1000)
+        t_per: np.array(float) = 2.5*np.ones(n)
         
         noise: float = 1
 
     elif i==3:
 
-        depth: np.array(float) = 5*np.ones(100)
+        depth: np.array(float) = 5*np.ones(n)
 
-        amplitude: np.array(float) = 2*np.ones(100)
+        amplitude: np.array(float) = 2*np.ones(n)
 
         period: float = 7
 
-        phase: np.array(float) = np.linspace(0, 2, 100)
+        phase: np.array(float) = np.linspace(0, 2, n)
 
-        t_per: np.array(float) = 2.5*np.ones(100)
+        t_per: np.array(float) = 2.5*np.ones(n)
         
         noise: float = 1
 
     elif i==4:
 
-        depth: np.array(float) = 5*np.ones(1000)
+        depth: np.array(float) = 5*np.ones(n)
 
-        amplitude: np.array(float) = 2*np.ones(1000)
+        amplitude: np.array(float) = 2*np.ones(n)
 
         period: float = 7
 
         phase: float = 1
 
-        t_per: np.array(float) = np.linspace(0.01, 50, 1000)
+        t_per: np.array(float) = np.linspace(0.01, 50, n)
         
         noise: float = 1
         
     elif i==5:
         
-        depth: np.array(float) = 5*np.ones(1000)
+        depth: np.array(float) = 5*np.ones(n)
 
-        amplitude: np.array(float) = 2*np.ones(1000)
+        amplitude: np.array(float) = 2*np.ones(n)
 
         period: float = 7
 
         phase: float = 1
         
-        t_per: np.array(float) = 2.5*np.ones(1000)
+        t_per: np.array(float) = 2.5*np.ones(n)
         
-        noise: np.array(float) = np.linspace(0.1,10, 1000)
+        noise: np.array(float) = np.linspace(0.1,10, n)
 
     err_mean: List[float] = []
     
-    err_bar: List[np.array(float)] = []
+    err_bar_low: List[np.array(float)] = []
+    
+    err_bar_up: List[np.array(float)] = []
 
-    for j in range(len(t_per)):
+    for j in range(n):
 
         err: List[float] = []
 
-        for _ in range(100):
+        for _ in range(1000):
 
             time: np.array(float)
             flux: np.array(float)
@@ -282,7 +286,18 @@ def effectivity(i: int):
 
         err_mean.append(np.mean(err))
         
-        err_bar.append(conf_level.confidence_limits(err, 0.68))
+        err_bar = conf_level.confidence_limits(err, 0.68)
+        
+        err_bar_low.append(err_bar[0])
+        
+        err_bar_up.append(err_bar[1])
+        
+        if i==2:
+        
+            print(period[j])
+            
+    N: np.array(List[float]) = np.array(np.array(err_bar_low),\
+                                        np.array(err_bar_up))
 
     plt.figure()
     plt.ylabel('Relative error on the transit period determination')
@@ -290,57 +305,47 @@ def effectivity(i: int):
 
     if i==0:
 
-        plt.plot(depth, err_mean, marker='.')
-        for k in range(len(err_bar)):
-            plt.axvline(depth[k], err_bar[k][0], err_bar[k][1])
-        plt.xlabel("Transit's depth [u]")
+        plt.errorbar(depth, err_mean, yerr=N, fmt='.')
+        plt.xlabel("Transit's depth (a.u.)")
         plt.title("Relative error against transit's depth")
         plt.savefig('../Plots/Effectivity/REvsTD.pdf')
 
     elif i==1:
 
-        plt.plot(amplitude, err_mean, marker='.')
-        for k in range(len(err_bar)):
-            plt.axvline(amplitude[k], err_bar[k][0], err_bar[k][1])
-        plt.xlabel('Variability amplitude [u]')
+        plt.errorbar(amplitude, err_mean, yerr=N, fmt='.')
+        plt.xlabel('Variability amplitude (a.u.)')
         plt.title('Relative error against variability amplitude')
         plt.savefig('../Plots/Effectivity/REvsVA.pdf')
 
     elif i==2:
 
-        plt.plot(period, err_mean, marker='.')
-        for k in range(len(err_bar)):
-            plt.axvline(period[k], err_bar[k][0], err_bar[k][1])
-        plt.xlabel('Variability period [days]')
+        plt.errorbar(period, err_mean, yerr=N, fmt='.')
+        plt.xlabel('Variability period (days)')
         plt.title('Relative error against variability period')
         plt.savefig('../Plots/Effectivity/REvsVP.pdf')
 
     elif i==3:
 
-        plt.plot(phase, err_mean, marker='.')
-        for k in range(len(err_bar)):
-            plt.axvline(phase[k], err_bar[k][0], err_bar[k][1])
-        plt.xlabel(r'Variability phase [$\pi$ rad]')
+        plt.errorbar(phase, err_mean, yerr=N, fmt='.')
+        plt.xlabel(r'Variability phase ($\pi$ rad)')
         plt.title('Relative error against variability phase')
         plt.savefig('../Plots/Effectivity/REvsVPh.pdf')
 
     elif i==4:
 
-        plt.plot(t_per, err_mean, marker='.')
-        for k in range(len(err_bar)):
-            plt.axvline(t_per[k], err_bar[k][0], err_bar[k][1])
-        plt.xlabel('Transit period [days]')
+        plt.errorbar(t_per, err_mean, yerr=N, fmt='.')
+        plt.xlabel('Transit period (days)')
         plt.title('Relative error against transit period')
         plt.savefig('../Plots/Effectivity/REvsTP.pdf')
         
     elif i==5:
 
-        plt.plot(noise, err_mean, marker='.')
-        for k in range(len(err_bar)):
-            plt.axvline(noise[k], err_bar[k][0], err_bar[k][1])
+        plt.errorbar(noise, err_mean, yerr=N, fmt='.')
         plt.xlabel('Noise intensity')
         plt.title('Relative error against noise intensity')
         plt.savefig('../Plots/Effectivity/REvsNI.pdf')
+        
+    import updates
 
 def get_effectivity():
     """
@@ -356,5 +361,6 @@ def get_effectivity():
     - None
     """
     for i in range(6):
-
+        
         effectivity(i)
+effectivity(2)

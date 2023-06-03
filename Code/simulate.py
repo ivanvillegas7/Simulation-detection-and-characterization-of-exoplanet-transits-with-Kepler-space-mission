@@ -159,19 +159,19 @@ def sim_flux(noise_params):
     # Generate transit model
     flux_p: np.array(float)
     flux_p = generate_parabolic_transit(t_period, t0, t_duration, depth, time)
-
+    '''
     # Plot transit model
     plt.figure()
     plt.plot(time, flux_p, marker='.')
     plt.xlabel('Time (days)')
-    plt.ylabel('Flux')
+    plt.ylabel('Signal (a.u.)')
     plt.title('Simulated Transit')
     plt.grid(True)
     plt.savefig('../Plots/Simulated Transit.pdf')
-
+    '''
     # Generate sinusoidal variability
-    amplitude: float = float(input('Sinusoidal variability amplitude: '))#2
-    period: float = float(input('Sinusoidal variability period: '))#7
+    amplitude: float = float(input('Sinusoidal variability amplitude: '))
+    period: float = float(input('Sinusoidal variability period: '))
     phase: float = float(input('Sinusoidal variability phase (in units of π): '))
     offset: float = float(input('Stellar flux offset (order of magnitude): '))
 
@@ -186,18 +186,17 @@ def sim_flux(noise_params):
     # Combine flux with variability and noise
     flux: np.array(float)
     flux = flux_p + variability + noise
-
+    '''
     # Plot simulated flux
     plt.figure()
     plt.plot(time, flux, marker='.', ls='none')
     plt.xlabel('Time (days)')
-    plt.ylabel('Flux')
+    plt.ylabel('Signal (a.u.)')
     plt.title('Simulated Flux')
     plt.grid(True)
     plt.savefig('../Plots/Total Flux.pdf')
-
+    '''
     return(time, flux)
-
 
 def data_maker():
     """

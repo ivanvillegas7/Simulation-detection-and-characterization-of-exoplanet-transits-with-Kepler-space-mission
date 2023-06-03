@@ -34,17 +34,21 @@ import simulate
 import read
 import analize
 import remove
+import effectivity
 
 def main():
     """
     Executes the main program for filtering and analyzing star's light curve.
-    It calls the 'data_maker' function to generate simulated data or the
-    'read_data' function to read real data depending if the user want to analize
-    simulated or real data. It prompts the user to enter a window size for the
-    median filter (using the 'median_filter' function), and then applies the
-    filter to the simulated data. It finds the best parameters fitting the
-    plottered curve and computes the transit without the stellar variability
-    (printing the values of the transit main parameters).
+    
+    · It offers the posibility of checking how effective the proposed method is.
+    
+    · It calls the 'data_maker' function to generate simulated data or the
+      'read_data' function to read real data depending if the user want to analize
+      simulated or real data. It prompts the user to enter a window size for the
+      median filter (using the 'median_filter' function), and then applies the
+      filter to the simulated data. It finds the best parameters fitting the
+      plottered curve and computes the transit without the stellar variability
+      (printing the values of the transit main parameters).
 
     Parameters:
     - None
@@ -58,7 +62,29 @@ def main():
     - median_filter() from analize.py
     - best_fit() from analize.py
     - discard_variability() from remove.py
+    - get_effectivity() from effectivity.py
     """
+    
+    option: str
+    option = input('Do you want to check how effective the method is? (Y or N): ')
+    
+    # Make sure the user chooses a valid option
+    while option != 'Y' and option != 'N':
+        
+        print('')
+        print('Thats not an option. Please enter a valid option (Y or N).')
+        option = input("Do you want to check how effective the method is? (Y or N): ")
+    
+    if option == 'Y':
+        
+        print('This will take arround 18 hours.')
+        
+        option: str
+        option = input('Do you want to ocntinue? (Y or N): ')
+        
+        if option=='Y':
+
+            effectivity.get_effectivity()
     
     # Define the time and flux arrays for data_maker()
     time: np.array(float)
@@ -79,6 +105,15 @@ def main():
 
         # Generate the time and flux data for the star's light curve
         time, flux = simulate.data_maker()
+        """
+        with open('../simulated.txt', 'w') as f:
+            
+            f.write('Time   Filtered Flux')
+            
+            for i in range(len(time)):
+                
+                f.write(f'\n{time[i]}   {filtered_flux[i]}')
+        """
         
     else:
         
@@ -91,9 +126,17 @@ def main():
         
     # Apply a median filter to the flux data
     filtered_flux: np.array(float)
-    window_size: int = int(input('Window size for the median filter: '))
+    window_size: int = int(input('Window size for the median filter (~101): '))
     filtered_flux = analize.median_filter(time, flux, window_size)
-    
+    """
+    with open('../data.txt', 'w') as f:
+        
+        f.write('Time   Filtered Flux')
+        
+        for i in range(len(time)):
+            
+            f.write(f'\n{time[i]}   {filtered_flux[i]}')
+    """
     # Fit the filtered flux data to a curve
     best_fit_params: np.array(float)
     best_fit_params = analize.best_fit(time, filtered_flux)
@@ -101,5 +144,15 @@ def main():
     # Discard the variability from the star's light curve
     flux_nv: np.array(float)
     flux_nv = remove.discard_variability(time, filtered_flux, best_fit_params)
-
-    analize.characterization(time, flux_nv)
+    """
+    with open('../cleaned *.txt', 'w') as f: # *: name to identify
+        
+        f.write('Time   Filtered Flux')
+        
+        for i in range(len(time)):
+            
+            f.write(f'\n{time[i]}   {filtered_flux[i]}')
+    """
+    period: float = analize.get_period(flux_nv, 1/(time[1]-time[0]))
+    
+    analize.characterization(time, flux, period)
