@@ -258,9 +258,26 @@ def characterization(time, flux, period, star):
         
         rel: np.array(float) = np.mean(err)/np.mean(flux)
         
+        rel_R: float = float(input('Stellar radius error: '))/stellar_radius
+        
+        rel_M: float = float(input('Stellar mass error: '))/M_star
+        
+        rel_T: float = float(input('Stellar temperature error: '))/stellar_temp
+        
+        delta_P: float = period*rel
+        
+        delta_R: float = planet_radius*np.sqrt(rel**2/2+rel_R**2)
+        
+        delta_a: float = distance_to_star*np.sqrt((2*rel**2+rel_M**2)/3)
+        
+        delta_i: float = inclination*rel
+        
+        delta_T: float = planet_temp*np.sqrt(rel_T++2+rel_R**2/2+(2*rel**2+\
+                                                                  rel_M**2)/3)
+        
         # Print results
-        print(f'\nPeriod: ({period:.2f}±{period*rel:.2f}) days.')
-        print(f"Planet's radius: ({planet_radius:.2f}±{planet_radius*rel:.2f}) R🜨.")
-        print(f'Planet-Star distance: ({distance_to_star:.2f}±{distance_to_star*rel/np.sqrt(3):.2f}) km.')
-        print(f'Orbit inclination: ({inclination:.2f}±{inclination*rel*np.sqrt(2):.2f})π rad.')
-        print(f"Planet's temperature: ({planet_temp:.2f}±{planet_temp*rel*np.sqrt(2):.2f}) K.")
+        print(f'\nPeriod: ({period:.2f}±{delta_P:.2f}) days.')
+        print(f"Planet's radius: ({planet_radius:.2f}±{delta_R:.2f}) R🜨.")
+        print(f'Planet-Star distance: ({distance_to_star:.2f}±{delta_a:.2f}) km.')
+        print(f'Orbit inclination: ({inclination:.2f}±{delta_i:.2f})π rad.')
+        print(f"Planet's temperature: ({planet_temp:.2f}±{delta_T:.2f}) K.")
