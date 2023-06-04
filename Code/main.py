@@ -115,6 +115,8 @@ def main():
         # Read the time and flux data for the star's light curve
         time, flux = read.read_data(f'../Data/{file}')
         
+        star: str = file[0:len(file)-4]
+        
     # Apply a median filter to the flux data
     filtered_flux: np.array(float)
     window_size: int = int(input('Window size for the median filter (~101): '))
@@ -130,4 +132,4 @@ def main():
     
     period: float = analize.get_period(flux_nv, 1/(time[1]-time[0]))
     
-    analize.characterization(time, flux, period)
+    analize.characterization(time, flux, period, star)

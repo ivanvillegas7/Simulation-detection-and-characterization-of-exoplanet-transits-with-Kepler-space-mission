@@ -203,7 +203,7 @@ def get_period(flux, sampling_f):
     
     return period
 
-def characterization(time, flux, period):
+def characterization(time, flux, period, star):
     """
     This function characterizes an exoplanet based on its light curve, taking
     into account the stellar variability.
@@ -243,9 +243,24 @@ def characterization(time, flux, period):
     planet_temp = stellar_temp*np.sqrt(stellar_radius*6.957e5/\
                                        (2*distance_to_star))
     
-    # Print results
-    print(f'\nPeriod: {period:.2f} days.')
-    print(f"Planet's radius: {planet_radius:.2f} R🜨.")
-    print(f'Planet-Star distance: {distance_to_star:.2f} km.')
-    print(f'Orbit inclination: {inclination:.2f}π rad.')
-    print(f"Planet's temperature: {planet_temp:.2f} K.")
+    if star=='none':
+    
+        # Print results
+        print(f'\nPeriod: {period:.2f} days.')
+        print(f"Planet's radius: {planet_radius:.2f} R🜨.")
+        print(f'Planet-Star distance: {distance_to_star:.2f} km.')
+        print(f'Orbit inclination: {inclination:.2f}π rad.')
+        print(f"Planet's temperature: {planet_temp:.2f} K.")
+        
+    else:
+        
+        err: np.array(float) = np.loadtxt(f'../Data/{star}_err.tbl', skiprows=3)
+        
+        rel: np.array(float) = np.mean(err)/np.mean(flux)
+        
+        # Print results
+        print(f'\nPeriod: ({period:.2f}±{period*rel:.2f}) days.')
+        print(f"Planet's radius: ({planet_radius:.2f}±{planet_radius*rel:.2f}) R🜨.")
+        print(f'Planet-Star distance: ({distance_to_star:.2f}±{distance_to_star*rel/np.sqrt(3):.2f}) km.')
+        print(f'Orbit inclination: ({inclination:.2f}±{inclination*rel*np.sqrt(2):.2f})π rad.')
+        print(f"Planet's temperature: ({planet_temp:.2f}±{planet_temp*rel*np.sqrt(2):.2f}) K.")
