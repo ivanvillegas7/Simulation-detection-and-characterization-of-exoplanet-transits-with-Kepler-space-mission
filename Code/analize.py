@@ -272,7 +272,7 @@ def characterization(time, flux, period, star):
         
         delta_i: float = inclination*rel
         
-        delta_T: float = planet_temp*np.sqrt(rel_T++2+rel_R**2/2+(2*rel**2+\
+        delta_T: float = planet_temp*np.sqrt(rel_T**2+rel_R**2/2+(2*rel**2+\
                                                                   rel_M**2)/3)
         
         # Print results
