@@ -107,7 +107,7 @@ def median_filter(time: np.array(float), flux: np.array(float),\
     
     return filtered_flux
 
-def best_fit_func(x, a, b, c, d):#, t0, p, dur, dep, m):
+def best_fit_func(x, a, b, c, d):
     """
     A function that models the light curve of a star with a transit and a
     sinusoidal signal.
