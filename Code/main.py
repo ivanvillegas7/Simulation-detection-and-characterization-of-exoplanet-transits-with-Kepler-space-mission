@@ -106,6 +106,8 @@ def main():
         # Generate the time and flux data for the star's light curve
         time, flux = simulate.data_maker()
         
+        star: str = 'none'
+        
     else:
         
         # Ask for the file name
