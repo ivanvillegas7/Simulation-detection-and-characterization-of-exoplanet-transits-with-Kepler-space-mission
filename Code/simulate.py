@@ -29,11 +29,11 @@ duration, as well as the amplitude, period, phase, and offset of the sinusoidal
 variability. The function then generates a simulated transit using the
 simulate_transit function and generates a sinusoidal variability using the
 sinusoidal_variability function. The function generates noise using a Gaussian
-and noncentral Student's t distribution with user-specified parameters. The
-final light curve is obtained by adding the transit, variability, and noise
-together. The function returns an array of time values and an array of simulated
-flux values. The function also generates a plot of the simulated transit flux
-data and a plot of the simulated flux data.
+and non-central t distribution with user-specified parameters. The final light
+curve is obtained by adding the transit, variability, and noise together. The
+function returns an array of time values and an array of simulated flux values.
+The function also generates a plot of the simulated transit flux data and a plot
+of the simulated flux data.
 
 The discard_planet function was developed by Jacob Robnik and Uroš Seljak,
 published at their article 'Kepler Data Analysis: Non-Gaussian Noise and Fourier
@@ -123,13 +123,10 @@ def sim_flux(noise_params):
     Parameters:
     - noise_params (List[float]): list of parameters for noise generation.
         noise_params[0]: fraction of outliers in the data.
-        noise_params[1]: degrees of freedom for non-central Student's t
-                         distribution.
-        noise_params[2]: non-central parameter for non-central Student's t
-                         distribution.
-        noise_params[3]: mean value for non-central Student's t distribution.
-        noise_params[4]: scale parameter for non-central Student's t
-                         distribution.
+        noise_params[1]: degrees of freedom for non-central t distribution.
+        noise_params[2]: non-central parameter for non-central t distribution.
+        noise_params[3]: mean value for non-central t distribution.
+        noise_params[4]: scale parameter for non-central t distribution.
 
     Returns:
     - time (1D array): array of time values.
@@ -137,9 +134,9 @@ def sim_flux(noise_params):
 
     Plots:
     Generates a plot of the simulated transit flux data.
-    The plot is saved in 'Plots' as 'Simulated Transit.pdf'
+    The plot is saved in 'Plots' as 'Simulated Transit.jpg'
     Generates a plot of the simulated flux data.
-    The plot is saved in 'Plots' as 'Simulated Flux.pdf'
+    The plot is saved in 'Plots' as 'Simulated Flux.jpg'
             
     Uses:
     - generate_parabolic_transit()
@@ -163,11 +160,11 @@ def sim_flux(noise_params):
     # Plot transit model
     plt.figure()
     plt.plot(time, flux_p, marker='.')
-    plt.xlabel('Time (days)')
-    plt.ylabel('Signal (a.u.)')
-    plt.title('Simulated Transit')
+    plt.xlabel('Tiempo (días)')
+    plt.ylabel('Señal (u.a.)')
+    plt.title('Tránsito simulado')
     plt.grid(True)
-    plt.savefig('../Plots/Simulated Transit.pdf')
+    plt.savefig('../Plots/Simulated Transit.jpg')
     
     # Generate sinusoidal variability
     amplitude: float = float(input('Sinusoidal variability amplitude: '))
@@ -190,26 +187,26 @@ def sim_flux(noise_params):
     # Plot simulated flux
     plt.figure()
     plt.plot(time, flux, marker='.', ls='none')
-    plt.xlabel('Time (days)')
-    plt.ylabel('Signal (a.u.)')
-    plt.title('Simulated Flux')
+    plt.xlabel('Tiempo (días)')
+    plt.ylabel('Señal (u.a.)')
+    plt.title('Señal simulada')
     plt.grid(True)
-    plt.savefig('../Plots/Total Flux.pdf')
+    plt.savefig('../Plots/Total Flux.jpg')
     
     return(time, flux)
 
 def data_maker():
     """
-    Generates simulated time series data with a non-central Student's
-    t-distribution and an added outlier fraction.
+    Generates simulated time series data with a non-central t distribution and
+    an added outlier fraction.
 
     Arguments:
     
     - A (float): outlier fraction.
-    - df (float): degrees of freedom for non-central Student's t-distribution.
+    - df (float): degrees of freedom for non-central t-distribution.
     - nc (float): non-central parameter.
-    - loc (float): mean value of non-central Student's t-distribution.
-    - scale (float): scale of non-central Student's t-distribution.
+    - loc (float): mean value of non-central t-distribution.
+    - scale (float): scale of non-central t-distribution.
 
     Returns:
     
@@ -225,16 +222,16 @@ def data_maker():
     A = float(input('Outlier fraction: '))
 
     df: float  
-    df = float(input("Non-central Student's t distribution degrees of freedom: "))
+    df = float(input("Non-central t distribution degrees of freedom: "))
     
     nc: float
     nc = float(input("Non-central paarameter: "))
 
     loc: float
-    loc = float(input("Non-central Student's t distribution mean value: "))
+    loc = float(input("Non-central t distribution mean value: "))
 
     scale: float
-    scale = float(input("Non-central Student's t distribution scale: "))
+    scale = float(input("Non-central t distribution scale: "))
 
     params: List[float]
     params = [A, df, nc, loc, scale]
